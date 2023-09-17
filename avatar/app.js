@@ -124,9 +124,17 @@ async function createScene() {
 
 
     host.GestureFeature.playGesture('Gesture', 'wave', defaultGestureOptions);
-    /*host.TextToSpeechFeature.play('Hey! Kom lige herover');
+    //host.TextToSpeechFeature.play('I skovens dunkle og grusomme mørke findes væsner der lever i både vinter og tørke.');
+    host.TextToSpeechFeature.play(`<speak>
+I skovens dunkle og grusomme mørke findes væsner der lever i både vinter og tørke.
+<mark name='{"feature":"PointOfInterestFeature","method":"setTargetByName","args":["chargaze"]}'/>
+Nu sker der noget stort.
+<mark name='{"feature":"GestureFeature","method":"playGesture","args":["Gesture", "big", { "holdTime": 1.5, "minimumInterval": 0 }]}'/> 
+Ja det gjorde der.
+</speak>`);
 
-    setTimeout(function () {
+
+    /*setTimeout(function () {
       host.GestureFeature.playGesture('Gesture', 'you', defaultGestureOptions);
       host.TextToSpeechFeature.play('Ja dig... Pas på! Skoven er mørk og der er fyldt med skrækkelige væsner.');
 
@@ -151,9 +159,8 @@ function initUi() {
   emoteSelect.addEventListener('change', evt => playEmote(evt.target.value));
 
   // Reveal the UI.
-  document.getElementById('uiPanel').classList.remove('hide');
-
-  document.getElementById('speakButton').onclick = speak.bind(this);
+  //document.getElementById('uiPanel').classList.remove('hide');
+  //document.getElementById('speakButton').onclick = speak.bind(this);
 }
 
 function playGesture(name) {
