@@ -1,6 +1,73 @@
+import {Engine} from '@babylonjs/core/Engines/engine';
+import {Color3, Vector3, Angle} from '@babylonjs/core/Maths/math';
+import {DirectionalLight} from '@babylonjs/core/Lights/directionalLight';
+import {ArcRotateCamera} from '@babylonjs/core/Cameras/arcRotateCamera';
+import {ShadowGenerator} from '@babylonjs/core/Lights/Shadows/shadowGenerator';
+import '@babylonjs/core/Helpers/sceneHelpers';
+import '@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent';
+
 import {HostObject} from '@amazon-sumerian-hosts/babylon';
 import {Scene} from '@babylonjs/core/scene';
-import DemoUtils from './common/demo-utils';
+
+async function startShow(createScene) {
+  const canvas = document.getElementById('renderCanvas');
+  const engine = new Engine(canvas, true);
+  const scene = await createScene(canvas);
+  scene.render();
+  engine.runRenderLoop(() => scene.render());
+  window.addEventListener('resize', () => engine.resize());
+
+  // Reveal the loaded scene.
+  document.getElementById('mainScreen').classList.remove('loading');
+}
+
+function setupSceneEnvironment(scene) {
+  // Create a simple environment.
+  const environmentHelper = scene.createDefaultEnvironment({
+    groundOpacity: 0,
+    groundShadowLevel: 0.1,
+  });
+  environmentHelper.setMainColor(new Color3(0, 0, 0));
+
+  scene.environmentIntensity = 1.2;
+
+  const shadowLight = new DirectionalLight(
+    'shadowLight',
+    new Vector3(0.8, -2, -1)
+  );
+  shadowLight.diffuse = new Color3(1, 0.9, 0.62);
+  shadowLight.intensity = 2;
+
+  const keyLight = new DirectionalLight('keyLight', new Vector3(0.3, -1, -2));
+  keyLight.diffuse = new Color3(1, 0.9, 0.65);
+  keyLight.intensity = 3;
+
+  // Add a camera.
+  const cameraRotation = Angle.FromDegrees(85).radians();
+  const cameraPitch = Angle.FromDegrees(70).radians();
+  const camera = new ArcRotateCamera(
+    'camera',
+    cameraRotation,
+    cameraPitch,
+    2.6,
+    new Vector3(0, 1.0, 0)
+  );
+  camera.wheelDeltaPercentage = 0.01;
+  camera.minZ = 0.01;
+
+  // Initialize user control of camera.
+  const canvas = scene.getEngine().getRenderingCanvas();
+  camera.attachControl(canvas, true);
+
+  const shadowGenerator = new ShadowGenerator(2048, shadowLight);
+  shadowGenerator.useBlurExponentialShadowMap = true;
+  shadowGenerator.blurKernel = 8;
+  scene.meshes.forEach(mesh => {
+    shadowGenerator.addShadowCaster(mesh);
+  });
+
+  return {scene, shadowGenerator};
+}
 
 let host;
 let scene;
@@ -11,18 +78,14 @@ const defaultGestureOptions = {
 };
 
 async function createScene() {
-  // Create an empty scene. Note: Sumerian Hosts work with both
-  // right-hand or left-hand coordinate system for babylon scene
+
   scene = new Scene();
   scene.useRightHandedSystem = true;
 
-  const {shadowGenerator} = DemoUtils.setupSceneEnvironment(scene);
+  const {shadowGenerator} = setupSceneEnvironment(scene);
   initUi();
 
   // ===== Configure the AWS SDK =====
-
-  // This is served by webpack-dev-server and comes from demo-credentials.js in the repo root
-  // If you copy this example, you will substitute in your own cognito Pool ID
   const config = await (await fetch('/devConfig.json')).json();
   const cognitoIdentityPoolId = config.cognitoIdentityPoolId;
 
@@ -52,6 +115,7 @@ async function createScene() {
     shadowGenerator.addShadowCaster(mesh);
   });
 
+  
   setTimeout(function () {
     document.getElementById('renderCanvas').classList.remove('invisible');
     document.getElementById('renderCanvas').classList.add('animate__animated');
@@ -60,7 +124,7 @@ async function createScene() {
 
 
     host.GestureFeature.playGesture('Gesture', 'wave', defaultGestureOptions);
-    host.TextToSpeechFeature.play('Hey! Kom lige herover');
+    /*host.TextToSpeechFeature.play('Hey! Kom lige herover');
 
     setTimeout(function () {
       host.GestureFeature.playGesture('Gesture', 'you', defaultGestureOptions);
@@ -69,7 +133,7 @@ async function createScene() {
       setTimeout(function () {
         host.GestureFeature.playGesture('Gesture', 'aggressive', defaultGestureOptions);
       }, 2000);
-    }, 5000);
+    }, 5000);*/
   }, 5000);
 
   return scene;
@@ -114,4 +178,4 @@ function speak() {
   host.TextToSpeechFeature.play(speech);
 }
 
-DemoUtils.loadDemo(createScene);
+startShow(createScene);
