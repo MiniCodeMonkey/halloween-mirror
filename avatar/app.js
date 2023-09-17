@@ -122,15 +122,72 @@ async function createScene() {
     document.getElementById('renderCanvas').classList.add('animate__fadeIn');
     document.getElementById('renderCanvas').classList.add('animate__slow');
 
+    setTimeout(function () {
+      document.getElementById('eyes').classList.remove('invisible');
+      document.getElementById('eyes').classList.add('animate__animated');
+      document.getElementById('eyes').classList.add('animate__fadeIn');
+      document.getElementById('eyes').classList.add('animate__slow');
+    }, 12000);
 
-    host.GestureFeature.playGesture('Gesture', 'wave', defaultGestureOptions);
+    setTimeout(function () {
+      document.getElementById('eyes').classList.remove('animate__fadeIn');
+      document.getElementById('eyes').classList.add('animate__fadeOut');
+    }, 12000 + 2500);
+
+    setTimeout(function () {
+      document.getElementById('pumpkin').classList.remove('invisible');
+      document.getElementById('pumpkin').classList.add('animate__animated');
+      document.getElementById('pumpkin').classList.add('animate__slideInLeft');
+      document.getElementById('pumpkin').classList.add('animate__slow');
+    }, 22000);
+
+    setTimeout(function () {
+      document.getElementById('pumpkin').classList.remove('animate__slideInLeft');
+      document.getElementById('pumpkin').classList.add('animate__slideOutLeft');
+    }, 22000 + 2500);
+
+    setTimeout(function () {
+      document.getElementById('renderCanvas').classList.remove('animate__fadeIn');
+      document.getElementById('renderCanvas').classList.add('animate__fadeOut');
+    }, 35000)
+
+
+    //host.GestureFeature.playGesture('Gesture', 'wave', defaultGestureOptions);
     //host.TextToSpeechFeature.play('I skovens dunkle og grusomme mørke findes væsner der lever i både vinter og tørke.');
-    host.TextToSpeechFeature.play(`<speak>
-I skovens dunkle og grusomme mørke findes væsner der lever i både vinter og tørke.
-<mark name='{"feature":"PointOfInterestFeature","method":"setTargetByName","args":["chargaze"]}'/>
-Nu sker der noget stort.
-<mark name='{"feature":"GestureFeature","method":"playGesture","args":["Gesture", "big", { "holdTime": 1.5, "minimumInterval": 0 }]}'/> 
-Ja det gjorde der.
+    host.TextToSpeechFeature.play(`
+<speak>
+      <p>
+        Godt du er <w role="amazon:VB">her</w>!
+        <mark name='{"feature":"GestureFeature","method":"playGesture","args":["Emote", "cheer"]}'/>
+      </p>
+
+      <break />
+
+      <p>
+        Jeg har brug for din hjælp!
+      </p>
+
+      <prosody rate="slow">
+        <p>Der er sluppet et monster fri i skoven!!!</p>
+        
+        <p>Det er sådan cirka så højt her.</p>
+        <mark name='{"feature":"GestureFeature","method":"playGesture","args":["Gesture", "big", { "holdTime": 0.8, "minimumInterval": 0 }]}'/> 
+        <p>Det har store røde øjne.</p>
+
+        <break />
+
+        <mark name='{"feature":"GestureFeature","method":"playGesture","args":["Gesture", "defense", { "holdTime": 0.8, "minimumInterval": 0 }]}'/> 
+        <p>Det nåede at slippe væk fra mig sidst jeg var derinde.</p>
+
+        <mark name='{"feature":"GestureFeature","method":"playGesture","args":["Gesture", "heart", { "holdTime": 0.8, "minimumInterval": 0 }]}'/> 
+        <p>Du må gerne hjælpe mig med at skræmme det væk. Baby Græskarerne er meget bange for det.</p>
+        <p>Men pas på! Jeg ved ikke hvad det kan finde på at gøre.</p>
+
+        <break />
+
+        <p>God fornøjelse!</p>
+        <mark name='{"feature":"GestureFeature","method":"playGesture","args":["Emote", "applause"]}'/>
+      </prosody>
 </speak>`);
 
 

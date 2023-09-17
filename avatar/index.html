@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gestures Demo</title>
+    <title>Halloween Mirror</title>
 
     <link rel="stylesheet" href="app.css" />
 
@@ -23,6 +23,15 @@
   <body style="background: #000;">
     <div id="mainScreen" class="screen loading">
       <canvas id="renderCanvas" class="invisible"></canvas>
+
+      <div id="eyes" class="invisible" style="position: absolute; top: 40%; right: 20%; display: flex;">
+        <div style="border-radius: 100%; width: 40px; height: 40px; background: red; filter: blur(8px); margin-right: 30px;">&nbsp;</div>
+        <div style="border-radius: 100%; width: 40px; height: 40px; background: red; filter: blur(8px);">&nbsp;</div>
+      </div>
+
+      <div id="pumpkin" class="invisible" style="position: absolute; top: 60%; left: 30%; display: flex;">
+        <img src="dist/baby-pumpkin.png" width="150" />
+      </div>
 
       <div id="uiPanel" class="hide panel">
         <textarea id="speechText" rows="8">Hey! Kom lige lidt tættere på. Hvem er du der?</textarea>
