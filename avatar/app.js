@@ -132,7 +132,7 @@ async function createScene() {
     setTimeout(function () {
       document.getElementById('eyes').classList.remove('animate__fadeIn');
       document.getElementById('eyes').classList.add('animate__fadeOut');
-    }, 12000 + 2500);
+    }, 12000 + 3500);
 
     setTimeout(function () {
       document.getElementById('pumpkin').classList.remove('invisible');
@@ -177,7 +177,7 @@ async function createScene() {
         <break />
 
         <mark name='{"feature":"GestureFeature","method":"playGesture","args":["Gesture", "defense", { "holdTime": 0.8, "minimumInterval": 0 }]}'/> 
-        <p>Det nåede at slippe væk fra mig sidst jeg var derinde.</p>
+        <p>Det nåede at slippe væk fra mig sidst jeg var inde i skoven.</p>
 
         <mark name='{"feature":"GestureFeature","method":"playGesture","args":["Gesture", "heart", { "holdTime": 0.8, "minimumInterval": 0 }]}'/> 
         <p>Du må gerne hjælpe mig med at skræmme det væk. Baby Græskarerne er meget bange for det.</p>
