@@ -61,22 +61,28 @@ class Score {
 
     this.whisper(`
       ${this.buildGestureMark('generic_c')}
-      Jeg tror ikke det er en go' idé at går dérind.
+      Jeg tror ikk det er en go' idé at går dérind.
     `);
     await this.waitUntilDoneTalking();
 
+    await Timeout.set(2000);
     await this.hideCharacter();
   }
 
   async scene2() {
+    this.ghostSound.play();
+    await Timeout.set(12000);
+
     this.showCharacter();
 
     this.whisper(`
       ${this.buildGestureMark('many')}
       Hørte du det?
     `);
+
     await this.waitUntilDoneTalking();
 
+    await Timeout.set(2000);
     await this.hideCharacter();
   }
 
@@ -105,6 +111,7 @@ class Score {
     `);
     await this.waitUntilDoneTalking();
 
+    await Timeout.set(2000);
     await this.hideCharacter();
   }
 
@@ -117,6 +124,8 @@ class Score {
       this.host.TextToSpeechFeature.EVENTS.stop,
       this.onStopSpeech.bind(this)
     );
+
+    this.ghostSound = new Audio('./sounds/169968__klankbeeld__horror-ghost-16.wav');
 
     await this.scene1();
     await this.scene2();
