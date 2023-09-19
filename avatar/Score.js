@@ -7,14 +7,18 @@ class Score {
 
   showCharacter() {
     document.getElementById('renderCanvas').classList.remove('invisible');
+    document.getElementById('renderCanvas').classList.remove('animate__fadeOut');
     document.getElementById('renderCanvas').classList.add('animate__animated');
-    document.getElementById('renderCanvas').classList.add('animate__fadeIn');
     document.getElementById('renderCanvas').classList.add('animate__slow');
+    document.getElementById('renderCanvas').classList.add('animate__fadeIn');
   }
 
-  hideCharacter() {
-    document.getElementById('renderCanvas').classList.remove('animate__fadeIn');
+  async hideCharacter() {
+    document.getElementById('renderCanvas').classList.add('animate__animated');
+    document.getElementById('renderCanvas').classList.add('animate__slow');
     document.getElementById('renderCanvas').classList.add('animate__fadeOut');
+
+    await Timeout.set(2500);
   }
 
   /**
@@ -38,16 +42,70 @@ class Score {
     this.say(`<amazon:effect name="whispered">${content}</amazon:effect>`);
   }
 
+  buildGestureMark(name, time = 0.8) {
+    return `<mark name='{"feature":"GestureFeature","method":"playGesture","args":["Gesture", "${name}", { "holdTime": ${time}, "minimumInterval": 0 }]}'/> `
+  }
+
   async waitUntilDoneTalking() {
     while (this.isTalking) {
-      console.log('Talking');
       await Timeout.set(100);
     }
-    console.log('Done talking');
   }
 
   onStopSpeech() {
     this.isTalking = false;
+  }
+
+  async scene1() {
+    this.showCharacter();
+
+    this.whisper(`
+      ${this.buildGestureMark('generic_c')}
+      Jeg tror ikke det er en go' idé at går dérind.
+    `);
+    await this.waitUntilDoneTalking();
+
+    await this.hideCharacter();
+  }
+
+  async scene2() {
+    this.showCharacter();
+
+    this.whisper(`
+      ${this.buildGestureMark('many')}
+      Hørte du det?
+    `);
+    await this.waitUntilDoneTalking();
+
+    await this.hideCharacter();
+  }
+
+  async scene3() {
+    this.showCharacter();
+
+    this.whisper(`
+      ${this.buildGestureMark('you')}
+      Hey! Dig dér. Hvad laver du her?
+
+      <break />
+
+      Ved du ikke at det spøger i skoven?
+    `);
+    await this.waitUntilDoneTalking();
+
+    await this.hideCharacter();
+  }
+
+  async scene4() {
+    this.showCharacter();
+
+    this.whisper(`
+      ${this.buildGestureMark('you')}
+      Jeg ville ikke gå ind hvis jeg var dig.
+    `);
+    await this.waitUntilDoneTalking();
+
+    await this.hideCharacter();
   }
 
   async start() {
@@ -60,66 +118,10 @@ class Score {
       this.onStopSpeech.bind(this)
     );
 
-    this.showCharacter();
-
-    this.whisper("Jeg tror ikke det er en go' idé at går dérind.");
-    await this.waitUntilDoneTalking();
-
-    this.hideCharacter();
-
-
-
-
-    //this.host.GestureFeature.playGesture('Gesture', 'wave', defaultGestureOptions);
-    //this.host.TextToSpeechFeature.play('I skovens dunkle og grusomme mørke findes væsner der lever i både vinter og tørke.');
-
-    /*
-    this.host.TextToSpeechFeature.play(`
-<speak>
-      <amazon:effect name="whispered">Hvem er du? Hurtigt! Kom her.</amazon:effect>
-
-      <amazon:auto-breaths>
-      <p>
-        Godt du er her!
-        <mark name='{"feature":"GestureFeature","method":"playGesture","args":["Emote", "cheer"]}'/>
-      </p>
-
-      <break />
-
-      <p>
-        Jeg har brug for din hjælp!
-      </p>
-
-      <p>Der er sluppet et monster fri i skoven!!!</p>
-      
-      <p>Det er sådan cirka så højt her.</p>
-      <mark name='{"feature":"GestureFeature","method":"playGesture","args":["Gesture", "big", { "holdTime": 0.8, "minimumInterval": 0 }]}'/> 
-      <p>Det har store røde øjne.</p>
-
-      <break />
-
-      <mark name='{"feature":"GestureFeature","method":"playGesture","args":["Gesture", "defense", { "holdTime": 0.8, "minimumInterval": 0 }]}'/> 
-      <p>Det nåede at slippe væk fra mig sidst jeg var inde i skoven.</p>
-
-      <mark name='{"feature":"GestureFeature","method":"playGesture","args":["Gesture", "heart", { "holdTime": 0.8, "minimumInterval": 0 }]}'/> 
-      <p>Du må gerne hjælpe mig med at skræmme det væk. Baby Græskarerne er meget bange for det.</p>
-      <p>Men pas på! Jeg ved ikke hvad det kan finde på at gøre.</p>
-
-      <break />
-
-      <p>God fornøjelse!</p>
-      <mark name='{"feature":"GestureFeature","method":"playGesture","args":["Emote", "applause"]}'/>
-      </amazon:auto-breaths>
-</speak>`);
-*/
-
-    /*setTimeout(() => {
-      this.host.GestureFeature.playGesture('Gesture', 'you', defaultGestureOptions);
-      this.host.TextToSpeechFeature.play('Ja dig... Pas på! Skoven er mørk og der er fyldt med skrækkelige væsner.');
-
-      setTimeout(() => {
-        this.host.GestureFeature.playGesture('Gesture', 'aggressive', defaultGestureOptions);
-      }, 2000);*/
+    await this.scene1();
+    await this.scene2();
+    await this.scene3();
+    await this.scene4();
   }
 }
 
