@@ -8,6 +8,7 @@ import '@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent';
 
 import {HostObject} from '@amazon-sumerian-hosts/babylon';
 import {Scene} from '@babylonjs/core/scene';
+import Score from './Score.js';
 
 async function startShow(createScene) {
   const canvas = document.getElementById('renderCanvas');
@@ -99,12 +100,23 @@ async function createScene() {
   // Edit the characterId if you would like to use one of
   // the other pre-built host characters. Available character IDs are:
   // "Cristine", "Fiona", "Grace", "Maya", "Jay", "Luke", "Preston", "Wes"
-  const characterId = 'Cristine';
-  const characterConfig = HostObject.getCharacterConfig(
-    './character-assets',
-    characterId
-  );
-  const pollyConfig = {pollyVoice: 'Sofie', pollyEngine: 'neural'};
+  const characterConfig = {
+    modelUrl: './character-assets/characters/alien/alien.gltf',
+    gestureConfigUrl: './character-assets/animations/alien/gesture.json',
+    pointOfInterestConfigUrl: './character-assets/animations/alien/poi.json',
+    animUrls: {
+      animStandIdleUrl: './character-assets/animations/alien/stand_idle.glb',
+      animLipSyncUrl: './character-assets/animations/alien/lipsync.glb',
+      animGestureUrl: './character-assets/animations/alien/gesture.glb',
+      animEmoteUrl: './character-assets/animations/alien/emote.glb',
+      animFaceIdleUrl: './character-assets/animations/alien/face_idle.glb',
+      animBlinkUrl: './character-assets/animations/alien/blink.glb',
+      animPointOfInterestUrl: './character-assets/animations/alien/poi.glb',
+    },
+    lookJoint: 'char:gaze',
+  };
+
+  const pollyConfig = {pollyVoice: 'Mads', pollyEngine: 'standard'};
   host = await HostObject.createHost(scene, characterConfig, pollyConfig);
 
   // Tell the host to always look at the camera.
@@ -115,91 +127,9 @@ async function createScene() {
     shadowGenerator.addShadowCaster(mesh);
   });
 
-  
-  setTimeout(function () {
-    document.getElementById('renderCanvas').classList.remove('invisible');
-    document.getElementById('renderCanvas').classList.add('animate__animated');
-    document.getElementById('renderCanvas').classList.add('animate__fadeIn');
-    document.getElementById('renderCanvas').classList.add('animate__slow');
-
-    setTimeout(function () {
-      document.getElementById('eyes').classList.remove('invisible');
-      document.getElementById('eyes').classList.add('animate__animated');
-      document.getElementById('eyes').classList.add('animate__fadeIn');
-      document.getElementById('eyes').classList.add('animate__slow');
-    }, 12000);
-
-    setTimeout(function () {
-      document.getElementById('eyes').classList.remove('animate__fadeIn');
-      document.getElementById('eyes').classList.add('animate__fadeOut');
-    }, 12000 + 3500);
-
-    setTimeout(function () {
-      document.getElementById('pumpkin').classList.remove('invisible');
-      document.getElementById('pumpkin').classList.add('animate__animated');
-      document.getElementById('pumpkin').classList.add('animate__slideInLeft');
-      document.getElementById('pumpkin').classList.add('animate__slow');
-    }, 22000);
-
-    setTimeout(function () {
-      document.getElementById('pumpkin').classList.remove('animate__slideInLeft');
-      document.getElementById('pumpkin').classList.add('animate__slideOutLeft');
-    }, 22000 + 2500);
-
-    setTimeout(function () {
-      document.getElementById('renderCanvas').classList.remove('animate__fadeIn');
-      document.getElementById('renderCanvas').classList.add('animate__fadeOut');
-    }, 35000)
-
-
-    //host.GestureFeature.playGesture('Gesture', 'wave', defaultGestureOptions);
-    //host.TextToSpeechFeature.play('I skovens dunkle og grusomme mørke findes væsner der lever i både vinter og tørke.');
-    host.TextToSpeechFeature.play(`
-<speak>
-      <p>
-        Godt du er <w role="amazon:VB">her</w>!
-        <mark name='{"feature":"GestureFeature","method":"playGesture","args":["Emote", "cheer"]}'/>
-      </p>
-
-      <break />
-
-      <p>
-        Jeg har brug for din hjælp!
-      </p>
-
-      <prosody rate="slow">
-        <p>Der er sluppet et monster fri i skoven!!!</p>
-        
-        <p>Det er sådan cirka så højt her.</p>
-        <mark name='{"feature":"GestureFeature","method":"playGesture","args":["Gesture", "big", { "holdTime": 0.8, "minimumInterval": 0 }]}'/> 
-        <p>Det har store røde øjne.</p>
-
-        <break />
-
-        <mark name='{"feature":"GestureFeature","method":"playGesture","args":["Gesture", "defense", { "holdTime": 0.8, "minimumInterval": 0 }]}'/> 
-        <p>Det nåede at slippe væk fra mig sidst jeg var inde i skoven.</p>
-
-        <mark name='{"feature":"GestureFeature","method":"playGesture","args":["Gesture", "heart", { "holdTime": 0.8, "minimumInterval": 0 }]}'/> 
-        <p>Du må gerne hjælpe mig med at skræmme det væk. Baby Græskarerne er meget bange for det.</p>
-        <p>Men pas på! Jeg ved ikke hvad det kan finde på at gøre.</p>
-
-        <break />
-
-        <p>God fornøjelse!</p>
-        <mark name='{"feature":"GestureFeature","method":"playGesture","args":["Emote", "applause"]}'/>
-      </prosody>
-</speak>`);
-
-
-    /*setTimeout(function () {
-      host.GestureFeature.playGesture('Gesture', 'you', defaultGestureOptions);
-      host.TextToSpeechFeature.play('Ja dig... Pas på! Skoven er mørk og der er fyldt med skrækkelige væsner.');
-
-      setTimeout(function () {
-        host.GestureFeature.playGesture('Gesture', 'aggressive', defaultGestureOptions);
-      }, 2000);
-    }, 5000);*/
-  }, 5000);
+  const score = new Score(host);
+  score.start();
+  window.score = score;
 
   return scene;
 }

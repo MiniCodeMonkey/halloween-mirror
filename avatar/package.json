@@ -13,6 +13,7 @@
   "dependencies": {
     "@amazon-sumerian-hosts/babylon": "^2.0.6",
     "@babylonjs/core": "^4.2.2",
+    "await-timeout": "^1.1.1",
     "copy-webpack-plugin": "^10.2.4",
     "terser-webpack-plugin": "^5.3.9",
     "webpack": "^5.88.2",
